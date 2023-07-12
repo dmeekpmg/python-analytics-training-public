@@ -1,0 +1,4 @@
+pandas
+dash
+python-dotenv
+plotly
