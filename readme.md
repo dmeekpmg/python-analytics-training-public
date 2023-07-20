@@ -18,8 +18,71 @@ conda activate your_environment_name
 pip install -r requirements.txt
 ```
 
+## First-time setup of VSCode
+
+### Extensions
+
+While VSCode is fairly powerful on its own, it will be helpful to install several 
+extensions. The following are recommended:
+
+- gitgraph (similar to SourceTree or the git desktop tool with a visual commit history)
+- gitlens (powerful git tool with an optional paid upgrade)
+- MSSQL (a lightweight version of SQL Server Management Studio)
+- github pull requests and issues (to create, review and approve github pull requests)
+- Pylint (to show linting of python files)
+
+The core Python extension should already be installed, but if not, you will need to
+install that too.
+
+Other extensions that may be useful if you develop more widely:
+
+- SQLite (work with SQLite databases)
+- SAS (run SAS from VSCode)
+- R and R debugger (https://code.visualstudio.com/docs/languages/r)
+- Open (Open files in the default application)
+- Markdown All in One (preview markdown files and convert to HTML)
+- Live SASS compiler (for working with CSS and SASS)
+- autoDocstring (automatically create templates for docstrings)
+
+### Rulers
+
+Best practice code has a maximum line width. You can set and adjust this in VSCode by
+adding a setting such as the following to your user settings:
+
+```
+    "editor.rulers": [
+        {
+            "column": 72,
+            "color": "#1eff0015"
+        },
+        {
+            "column": 88,
+            "color": "#888888bb"
+        }
+    ]
+```
+
+## Project-specific setup of VSCode
+
+### Select the interpreter
+
 In VSCode, open the command palette, search for "Select Interpreter" and choose the
 environment you just created.
+
+### Configure the root folder for notebooks
+
+When testing code and working with prototypes, it is ideal if you can store your rough
+code outside of the core codebase. Typically, one might change the working directory
+using something like `os.chdir(os.getcwd().split("\")) ... etc`
+
+In VSCode, it is much easier. Just set up the default notebookfileroot setting for the 
+workspace. This repository already includes the settings file in .vscode/settings.json.
+
+Any folder-related settings can either be edited directly in this file (if you know
+the parameters) or editing through the UI. Open the command palette (Ctrl+Shift+P),
+search for "Open Settings (UI)" and then navigate to "User", "Workspace" or "Folder".
+
+https://code.visualstudio.com/docs/editor/variables-reference
 
 ## Data souce
 
