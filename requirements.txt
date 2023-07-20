@@ -2,3 +2,6 @@ pandas
 dash
 python-dotenv
 plotly
+ipykernel
+polars
+nbformat
