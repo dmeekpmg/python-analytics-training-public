@@ -6,5 +6,5 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-data_path = Path(os.getenv("DATA_PATH"))
+path = Path(os.getenv("DATA_PATH"))
 
