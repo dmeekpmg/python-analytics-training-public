@@ -23,7 +23,7 @@ nice_ids = [
     '76-224-sj2-1.3.R',
     '28-739-N-sj2-1.2.H'
 ]
-#sample_ids = nice_ids
+sample_ids = nice_ids
 
 df_sample = df_shapes[df_shapes.shape_id.isin(sample_ids)].sort_values([
     "shape_id", "shape_pt_sequence"
@@ -68,3 +68,5 @@ fig.update_layout(
 )
 
 fig.show()
+
+# %%
