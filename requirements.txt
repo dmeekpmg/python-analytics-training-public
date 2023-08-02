@@ -5,3 +5,4 @@ plotly
 ipykernel
 polars
 nbformat
+pytest

@@ -3,9 +3,12 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-from data import data
+import data
 
-df_shapes = pd.read_csv(data.path / "shapes.txt")
+df_shapes = pd.read_csv(data.data.path / "shapes.txt")\
+    .pipe(data.shapes.restructure)\
+    .pipe(data.shapes.add_end_lat_lon)
+
 df_shapes.sample(20)
 
 #%%
@@ -25,28 +28,19 @@ nice_ids = [
 ]
 sample_ids = nice_ids
 
-df_sample = df_shapes[df_shapes.shape_id.isin(sample_ids)].sort_values([
-    "shape_id", "shape_pt_sequence"
-]).copy().rename(columns={
-    'shape_pt_lat': 'lat',
-    'shape_pt_lon': 'lon'
-})
-
-df_sample[['end_lat', 'end_lon']] = df_sample.groupby('shape_id')[['lat', 'lon']].transform(lambda df: df.shift(-1))
 print(list(sample_ids))
 #%%
 
+df_sample = df_shapes[df_shapes.shape_id.isin(nice_ids)]
 fig = go.Figure()
 
-for id in sample_ids:
-    df_id = df_sample[df_sample.shape_id == id]
+for id, df_id in df_sample.groupby("shape_id"):
     fig.add_trace(
         go.Scattermapbox(
             mode = "lines",
             lon = df_id['lon'],
             lat = df_id['lat'],
             name=id
-            #marker = {'size': 10}
         )
     )
 
