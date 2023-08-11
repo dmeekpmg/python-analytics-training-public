@@ -1,5 +1,6 @@
 {
     "jupyter.notebookFileRoot": "${workspaceFolder}/pythontraining",
+    "python.analysis.extraPaths": ["${workspaceFolder}/pythontraining"],
     "python.testing.pytestArgs": [
         "tests"
     ],

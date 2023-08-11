@@ -1,6 +1,7 @@
-from pythontraining.visualisations import maps
 import pandas as pd
 from plotly.graph_objects import Figure
+
+from pythontraining.visualisations import maps
 
 
 def test_map():

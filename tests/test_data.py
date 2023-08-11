@@ -2,6 +2,7 @@ import pandas as pd
 
 from pythontraining.data import shapes
 
+
 def test_restructure():
     df = pd.DataFrame({
         'shape_pt_lat': [1, 2, 3],

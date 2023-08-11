@@ -86,7 +86,8 @@ https://code.visualstudio.com/docs/editor/variables-reference
 
 ## Data souce
 
-Download static data from the following links
+Download static data from the following links. This requires an account with TfNSW.
+https://opendata.transport.nsw.gov.au/node/4035/download
 
 https://opendata.transport.nsw.gov.au/dataset/temporary-andor-sample-gtfs-data/resource/8bbb51f1-b4aa-49e9-be47-db4bd4688152
 from page: https://opendata.transport.nsw.gov.au/dataset/temporary-andor-sample-gtfs-data
