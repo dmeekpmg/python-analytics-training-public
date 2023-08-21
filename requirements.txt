@@ -6,3 +6,5 @@ ipykernel
 polars
 nbformat
 pytest
+gtfs-realtime-bindings
+protobuf3-to-dict
