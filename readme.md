@@ -95,7 +95,10 @@ from page: https://opendata.transport.nsw.gov.au/dataset/temporary-andor-sample-
 Create a file called .env in the root of your repository and create variables like the 
 following:
 ```
-DATA_PATH="C:/Temp/advanced_python/sample_full_greater_sydney"
+DATA_PATH="C:/Temp/advanced_python"
+CERTS="C:/my_certs/Certificates"
+API_KEY=abcdefg1234567myapikeyfromTfNSW
+APP_NAME=myappname
 ```
 
 Paths need to have either forward slashes or double-backslashes.
@@ -135,3 +138,14 @@ from importlib import reload
 from multiple.levels.down import mymodule
 reload(mymodule)
 ```
+
+## Potential use cases
+
+- map of bus routes
+- density of bus routes
+- map of frequency of service
+- which days are less congested on my route to the office?
+- how many busses on the road at each time? What proportion?
+- on-time performance by agency
+- predictive model for factors that affect on-time performance
+- map of frequency by stop
