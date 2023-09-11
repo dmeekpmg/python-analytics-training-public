@@ -26,7 +26,6 @@ https://opendata.transport.nsw.gov.au/dataset/historical-gtfs-and-gtfs-realtime
 https://medium.com/@bhaveshpatelaus/gtfs-realtime-vehicle-positions-using-python-and-databricks-tfnsw-a33b98f22e97
 
 
-
 Read this second: https://opendata.transport.nsw.gov.au/developer-information
 https://opendata.transport.nsw.gov.au/how-use-open-data-develop-application
 
