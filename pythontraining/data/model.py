@@ -13,8 +13,8 @@ class Base(DeclarativeBase):
 
 def _simple_repr(cls, attrs):
         return (
-            cls.__name__ + 
-            ", ".join(f"{attr}={cls.getattr(attr)!r}" for attr in attrs) + ")"
+            cls.__class__.__name__ + "(" + 
+            ", ".join(f"{attr}={getattr(cls, attr)!r}" for attr in attrs) + ")"
         )
 
 
@@ -57,7 +57,7 @@ class Shape(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     lat: Mapped[float]
     lon: Mapped[float]
-    sequence: Mapped[int]
+    sequence: Mapped[int] = mapped_column(primary_key=True)
     dist_traveled: Mapped[float]
 
     def __repr__(self) -> str:

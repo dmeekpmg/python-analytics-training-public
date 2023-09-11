@@ -1,8 +1,8 @@
 """initialise database
 
-Revision ID: c87d8943f1f5
+Revision ID: fb17249dcdd3
 Revises: 
-Create Date: 2023-09-11 20:59:40.495305
+Create Date: 2023-09-11 21:28:08.050579
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c87d8943f1f5'
+revision: str = 'fb17249dcdd3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -63,7 +63,7 @@ def upgrade() -> None:
     sa.Column('lon', sa.Float(), nullable=False),
     sa.Column('sequence', sa.Integer(), nullable=False),
     sa.Column('dist_traveled', sa.Float(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', 'sequence')
     )
     op.create_table('stop_times',
     sa.Column('trip_id', sa.String(), nullable=False),
