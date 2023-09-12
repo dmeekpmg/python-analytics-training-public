@@ -1,1 +1,19 @@
-Generic single-database configuration.
+Upgrade to the latest version of the database through the following 
+steps:
+
+* Open a terminal in the root folder for this project
+* Activate your environment
+* Run `alembic upgrade head`
+
+Alembic will run the upgrade scripts from the alembic\versions folder.
+
+To create a new upgrade script after changing the model run
+`alembic revision --autogenerate -m "initialise database"`
+
+Check the file that was generated to make sure that the changes
+are in line with what you expected. If there are more complex
+data migrations (e.g. copying data from one table to another) you
+can add these by hand.
+
+Refer to https://alembic.sqlalchemy.org/en/latest/tutorial.html for more
+information
