@@ -198,13 +198,14 @@ class Location(Base):
     __tablename__ = "locations"
 
     id: Mapped[str] = mapped_column(primary_key=True)
+    request_timestamp: Mapped[int] = mapped_column(primary_key=True)
     trip_id: Mapped[str]
     route_id: Mapped[str]
     schedule_relationship: Mapped[int]
-    lat: Mapped[float]
-    lon: Mapped[float]
-    bearing: Mapped[float]
-    speed: Mapped[float]
+    lat: Mapped[float] = mapped_column(nullable=True)
+    lon: Mapped[float] = mapped_column(nullable=True)
+    bearing: Mapped[float] = mapped_column(nullable=True)
+    speed: Mapped[float] = mapped_column(nullable=True)
     timestamp: Mapped[int]
     congestion_level: Mapped[int]
     stop_id: Mapped[str]

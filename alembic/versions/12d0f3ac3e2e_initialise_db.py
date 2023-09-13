@@ -42,22 +42,6 @@ def upgrade() -> None:
     sa.Column('end_date', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('service_id')
     )
-    op.create_table('locations',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('trip_id', sa.String(), nullable=False),
-    sa.Column('route_id', sa.String(), nullable=False),
-    sa.Column('schedule_relationship', sa.Integer(), nullable=False),
-    sa.Column('lat', sa.Float(), nullable=False),
-    sa.Column('lon', sa.Float(), nullable=False),
-    sa.Column('bearing', sa.Float(), nullable=False),
-    sa.Column('speed', sa.Float(), nullable=False),
-    sa.Column('timestamp', sa.Integer(), nullable=False),
-    sa.Column('congestion_level', sa.Integer(), nullable=False),
-    sa.Column('stop_id', sa.String(), nullable=False),
-    sa.Column('vehicle_id', sa.String(), nullable=False),
-    sa.Column('label', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('routes',
     sa.Column('id', sa.String(), nullable=False),
     sa.Column('agency_id', sa.String(), nullable=False),
