@@ -1,8 +1,8 @@
-"""initialise database
+"""initialise db
 
-Revision ID: fb17249dcdd3
+Revision ID: 2bd23e05f644
 Revises: 
-Create Date: 2023-09-11 21:28:08.050579
+Create Date: 2023-09-13 10:44:57.988050
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'fb17249dcdd3'
+revision: str = '2bd23e05f644'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,8 +26,21 @@ def upgrade() -> None:
     sa.Column('url', sa.String(length=50), nullable=False),
     sa.Column('timezone', sa.String(length=20), nullable=False),
     sa.Column('lang', sa.String(length=2), nullable=False),
-    sa.Column('phone', sa.Integer(), nullable=False),
+    sa.Column('phone', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('calendar',
+    sa.Column('service_id', sa.Integer(), nullable=False),
+    sa.Column('monday', sa.Integer(), nullable=False),
+    sa.Column('tuesday', sa.Integer(), nullable=False),
+    sa.Column('wednesday', sa.Integer(), nullable=False),
+    sa.Column('thursday', sa.Integer(), nullable=False),
+    sa.Column('friday', sa.Integer(), nullable=False),
+    sa.Column('saturday', sa.Integer(), nullable=False),
+    sa.Column('sunday', sa.Integer(), nullable=False),
+    sa.Column('start_date', sa.Integer(), nullable=False),
+    sa.Column('end_date', sa.Integer(), nullable=False),
+    sa.PrimaryKeyConstraint('service_id')
     )
     op.create_table('locations',
     sa.Column('id', sa.String(), nullable=False),
@@ -54,34 +67,32 @@ def upgrade() -> None:
     sa.Column('type', sa.Integer(), nullable=False),
     sa.Column('color', sa.String(length=6), nullable=False),
     sa.Column('text_color', sa.String(length=6), nullable=False),
-    sa.Column('exact_times', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('shapes',
     sa.Column('id', sa.String(), nullable=False),
+    sa.Column('sequence', sa.Integer(), nullable=False),
     sa.Column('lat', sa.Float(), nullable=False),
     sa.Column('lon', sa.Float(), nullable=False),
-    sa.Column('sequence', sa.Integer(), nullable=False),
     sa.Column('dist_traveled', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id', 'sequence')
     )
     op.create_table('stop_times',
     sa.Column('trip_id', sa.String(), nullable=False),
+    sa.Column('stop_sequence', sa.Integer(), nullable=False),
     sa.Column('arrival_time', sa.String(), nullable=False),
     sa.Column('departure_time', sa.String(), nullable=False),
     sa.Column('stop_id', sa.String(), nullable=False),
-    sa.Column('sequence', sa.Integer(), nullable=False),
-    sa.Column('stop_headsign', sa.String(), nullable=False),
+    sa.Column('stop_headsign', sa.String(), nullable=True),
     sa.Column('pickup_type', sa.Integer(), nullable=False),
     sa.Column('drop_off_type', sa.Integer(), nullable=False),
     sa.Column('shape_dist_traveled', sa.Float(), nullable=False),
     sa.Column('timepoint', sa.Integer(), nullable=False),
-    sa.Column('stop_note', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('stop_id')
+    sa.Column('stop_note', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('trip_id', 'stop_sequence')
     )
     op.create_table('stops',
     sa.Column('id', sa.String(), nullable=False),
-    sa.Column('code', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('lat', sa.Float(), nullable=False),
     sa.Column('lon', sa.Float(), nullable=False),
@@ -90,13 +101,14 @@ def upgrade() -> None:
     )
     op.create_table('trips',
     sa.Column('route_id', sa.String(), nullable=False),
+    sa.Column('trip_id', sa.String(), nullable=False),
     sa.Column('service_id', sa.String(), nullable=False),
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('headsign', sa.String(), nullable=False),
+    sa.Column('shape_id', sa.String(), nullable=False),
+    sa.Column('trip_headsign', sa.String(), nullable=True),
     sa.Column('direction_id', sa.Integer(), nullable=False),
     sa.Column('wheelchair_accessible', sa.Integer(), nullable=False),
     sa.Column('route_direction', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('route_id', 'id')
+    sa.PrimaryKeyConstraint('route_id', 'trip_id')
     )
     # ### end Alembic commands ###
 
@@ -109,5 +121,6 @@ def downgrade() -> None:
     op.drop_table('shapes')
     op.drop_table('routes')
     op.drop_table('locations')
+    op.drop_table('calendar')
     op.drop_table('agencies')
     # ### end Alembic commands ###
