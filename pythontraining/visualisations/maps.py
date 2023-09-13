@@ -11,6 +11,8 @@ def add_positions(fig:go.Figure, lat_lon:pd.DataFrame) -> go.Figure:
         )
     )
 
+    return fig
+
 def add_routes(fig:go.Figure, route_shapes:pd.DataFrame) -> go.Figure:
     for id, df_id in route_shapes.groupby("shape_id"):
         fig.add_trace(
@@ -18,7 +20,7 @@ def add_routes(fig:go.Figure, route_shapes:pd.DataFrame) -> go.Figure:
                 mode = "lines",
                 lon = df_id['lon'],
                 lat = df_id['lat'],
-                name=id
+                name = id
             )
         )
     

@@ -1,11 +1,14 @@
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
+from sqlalchemy import ForeignKey, String, Table
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+
+
+_gtfs_table_registry_: List[Table] = []
+
 
 class Base(DeclarativeBase):
     pass
@@ -17,10 +20,17 @@ def _simple_repr(cls, attrs):
             ", ".join(f"{attr}={getattr(cls, attr)!r}" for attr in attrs) + ")"
         )
 
-_gtfs_table_registry_ = []
 
+def register_gtfs(cls: Table):
+    """Function decorator to make it easy to keep track of which classes
+    need to be filled with GTFS data. Once the register is filled, we
+    can just call each of these classes in turn to fill the data with
+    the listed GTFS table and selected fields
 
-def register_gtfs(cls):
+    Returns:
+        SQLAlchemy Table: This table will be added to the registry of
+        GTFS tables. Each table should appear in the GTFS zip file
+    """
     _gtfs_table_registry_.append(cls)
     return cls
 
@@ -104,6 +114,8 @@ class Shape(Base):
     lon: Mapped[float]
     dist_traveled: Mapped[float]
 
+    trips: Mapped[List["Trip"]] = relationship(back_populates="shape")
+
     def __repr__(self) -> str:
         attrs = ['id', 'lat', 'lon', 'sequence', 'dist_traveled']
         return _simple_repr(self, attrs)
@@ -121,9 +133,11 @@ class Stop(Base):
     lat: Mapped[float]
     lon: Mapped[float]
     wheelchair_boarding: Mapped[int]
+
+    stop_times: Mapped[List["StopTime"]] = relationship(back_populates="stop")
     
     def __repr__(self) -> str:
-        attrs = ['id', 'lat', 'lon', 'code', 'name']
+        attrs = ['id', 'lat', 'lon', 'name']
         return _simple_repr(self, attrs)
 
 
@@ -135,35 +149,35 @@ class StopTime(Base):
                      'shape_dist_traveled', 'timepoint', 'stop_note')
     _gtfs_file_ = 'stop_times'
 
-    trip_id: Mapped[str] = mapped_column(primary_key=True)
+    trip_id: Mapped[str] = mapped_column(ForeignKey("trips.id"), primary_key=True)
     stop_sequence: Mapped[int] = mapped_column(primary_key=True)
     arrival_time: Mapped[str]
     departure_time: Mapped[str]
-    stop_id: Mapped[str]
+    stop_id: Mapped[str] = mapped_column(ForeignKey("stops.id"))
     stop_headsign: Mapped[str] = mapped_column(nullable=True)
     pickup_type: Mapped[int]
     drop_off_type: Mapped[int]
     shape_dist_traveled: Mapped[float]
     timepoint: Mapped[int]
     stop_note: Mapped[str] = mapped_column(nullable=True)
+
+    trips: Mapped[List["Trip"]] = relationship(back_populates="stop_times")
+    stop: Mapped["Stop"] = relationship(back_populates="stop_times")
     
     def __repr__(self) -> str:
-        attrs = ['trip_id', 'stop_id', 'arrival_time', 'departure_time', 'sequence']
+        attrs = ['trip_id', 'stop_id', 'arrival_time', 'departure_time', 'stop_sequence']
         return _simple_repr(self, attrs)
 
 
 @register_gtfs
 class Trip(Base):
     __tablename__ = "trips"
-    _gtfs_fields_ = ('route_id', 'trip_id', 'service_id', 'shape_id', 'trip_headsign',
+    _gtfs_fields_ = ('trip_id', 'route_id', 'service_id', 'shape_id', 'trip_headsign',
                      'direction_id', 'wheelchair_accessible', 'route_direction')
     _gtfs_file_ = 'trips'
 
-    route_id: Mapped[str] = mapped_column(
-        ForeignKey("routes.id"), 
-        primary_key=True
-    )
-    trip_id: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
+    route_id: Mapped[str] = mapped_column(ForeignKey("routes.id"))
     service_id: Mapped[str]
     shape_id: Mapped[str] = mapped_column(ForeignKey("shapes.id"))
     trip_headsign: Mapped[str] = mapped_column(nullable=True)
@@ -171,15 +185,12 @@ class Trip(Base):
     wheelchair_accessible: Mapped[int]
     route_direction: Mapped[str]
 
-    route: Mapped[List["Route"]] = relationship(back_populates="trips")
-
-    shape: Mapped[List["Shape"]] = relationship(
-        order_by="asc(Shape.sequence)",
-        primaryjoin="Trip.shape_id == Shape.id",
-    )
+    route: Mapped["Route"] = relationship(back_populates="trips")
+    shape: Mapped[List["Shape"]] = relationship(back_populates="trips", uselist=True)
+    stop_times: Mapped[List["StopTime"]] = relationship(back_populates="trips", uselist=True)
 
     def __repr__(self) -> str:
-        attrs = ['route_id', 'service_id', 'trip_id', 'trip_headsign']
+        attrs = ['route_id', 'service_id', 'id', 'trip_headsign']
         return _simple_repr(self, attrs)
     
 

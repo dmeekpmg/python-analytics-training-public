@@ -1,8 +1,8 @@
 """initialise db
 
-Revision ID: 2bd23e05f644
+Revision ID: 12d0f3ac3e2e
 Revises: 
-Create Date: 2023-09-13 10:44:57.988050
+Create Date: 2023-09-13 15:41:58.027759
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2bd23e05f644'
+revision: str = '12d0f3ac3e2e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -100,15 +100,17 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('trips',
+    sa.Column('id', sa.String(), nullable=False),
     sa.Column('route_id', sa.String(), nullable=False),
-    sa.Column('trip_id', sa.String(), nullable=False),
     sa.Column('service_id', sa.String(), nullable=False),
     sa.Column('shape_id', sa.String(), nullable=False),
     sa.Column('trip_headsign', sa.String(), nullable=True),
     sa.Column('direction_id', sa.Integer(), nullable=False),
     sa.Column('wheelchair_accessible', sa.Integer(), nullable=False),
     sa.Column('route_direction', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('route_id', 'trip_id')
+    sa.ForeignKeyConstraint(['route_id'], ['routes.id'], ),
+    sa.ForeignKeyConstraint(['shape_id'], ['shapes.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
