@@ -110,15 +110,13 @@ def get_latest_positions() -> List[dict]:
     return positions
 
 
-def upload_realtime(df: pd.DataFrame):
+def upload_realtime(df: pd.DataFrame, log:bool = True):
     df.to_sql("locations", engine, if_exists="append", index=False)
+    if log:
+        print(f"Saved {len(df)} locations at {datetime.now()}")
 
 
 def fetch_and_upload_positions():
     positions = get_latest_positions()
     df = get_positions_dataframe(positions)
     upload_realtime(df)
-
-
-if __name__ == "__main__":
-    fetch_and_upload_positions()
