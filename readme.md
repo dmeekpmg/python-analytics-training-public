@@ -94,9 +94,10 @@ Create a file called .env in the root of your repository and create variables li
 following:
 ```
 DATA_PATH="C:/Temp/advanced_python"
-CERTS="C:/my_certs/Certificates"
-API_KEY=abcdefg1234567myapikeyfromTfNSW
-APP_NAME=myappname
+CERT="C:/Users/abcusername/OneDrive - KPMG/Setup/Certificates/caadmin.netskope.com.pem"
+API_KEY=abcdefmyapikey
+APP_NAME=python_training_my_app
+SQLDRIVER="sqlite:///C:\\Temp\\advanced_python\\db.db"
 ```
 
 Paths need to have either forward slashes or double-backslashes.
