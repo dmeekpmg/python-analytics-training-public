@@ -6,6 +6,7 @@ from protobuf_to_dict import protobuf_to_dict
 from typing import List
 import pandas as pd
 from datetime import datetime
+
 from data.model import Location
 from data.data import engine
 

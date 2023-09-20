@@ -38,8 +38,8 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id', 'request_timestamp')
     )
     with op.batch_alter_table('stop_times', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'trips', ['trip_id'], ['id'])
-        batch_op.create_foreign_key(None, 'stops', ['stop_id'], ['id'])
+        batch_op.create_foreign_key("stoptime_trips", 'trips', ['trip_id'], ['id'])
+        batch_op.create_foreign_key("stoptime_stops", 'stops', ['stop_id'], ['id'])
 
     # ### end Alembic commands ###
 

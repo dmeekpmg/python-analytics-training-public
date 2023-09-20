@@ -5,8 +5,10 @@ from typing import Sequence
 from data import realtime
 
 
-START_HOUR = 8
+START_HOUR = 7
 START_MINUTE = 0
+WAIT_TIME = 60  # seconds
+MAX_ITERS = 120
 
 
 def generate_fetch_times(start_time=datetime.now(), wait_time=60, max_iters=60):
@@ -34,22 +36,19 @@ def generate_fetch_times(start_time=datetime.now(), wait_time=60, max_iters=60):
 
         yield next_time.timestamp()
         next_time += timedelta(0, wait_time)
-    
+
     return None
 
 
-def schedule_fetch(scheduler:sched.scheduler, fetch_times:Sequence): 
-    # schedule the next call first
+def schedule_fetch(scheduler: sched.scheduler, fetch_times: Sequence):
+    "schedule the next call first"
     try:
         scheduler.enterabs(
-            next(fetch_times), 
-            1, 
-            schedule_fetch, 
-            (scheduler,fetch_times)
+            next(fetch_times), 1, schedule_fetch, (scheduler, fetch_times)
         )
     except StopIteration:
         print("Last fetch has been reached")
-    
+
     try:
         realtime.fetch_and_upload_positions()
     except:
@@ -58,21 +57,15 @@ def schedule_fetch(scheduler:sched.scheduler, fetch_times:Sequence):
 
 
 def main():
-    # Generate times for today
+    "Generate times for today"
     now = datetime.now()
-    today = (now.year, now.month, now.day)
+    tomorrow = (now.year, now.month, now.day + 1)
     fetch_times = generate_fetch_times(
-        datetime(*today, START_HOUR, START_MINUTE), 
-        60
+        datetime(*tomorrow, START_HOUR, START_MINUTE), WAIT_TIME, MAX_ITERS
     )
 
     scheduler = sched.scheduler(time.time, time.sleep)
-    scheduler.enterabs(
-        next(fetch_times), 
-        1, 
-        schedule_fetch, 
-        (scheduler, fetch_times)
-    )
+    scheduler.enterabs(next(fetch_times), 1, schedule_fetch, (scheduler, fetch_times))
     scheduler.run()
 
 

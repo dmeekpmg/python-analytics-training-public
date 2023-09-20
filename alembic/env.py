@@ -12,6 +12,7 @@ load_dotenv()
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+config.set_main_option('sqlalchemy.url', os.getenv("SQLDRIVER"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -41,8 +42,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    # URL comes from .env file or falls back to alembic.ini
-    url = os.getenv("SQLDRIVER", config.get_main_option("sqlalchemy.url"))
+    url = config.get_main_option("sqlalchemy.url")
     
     context.configure(
         url=url,
