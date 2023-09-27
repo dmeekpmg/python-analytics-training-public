@@ -8,8 +8,8 @@ import zipfile
 from typing import List, IO
 from sqlalchemy import Table, delete
 
-from data import zip_path, engine, Session
-from model import Agency, Route, Shape, Stop, StopTime, Trip, Location, \
+from data.data import zip_path, engine, Session
+from data.model import Agency, Route, Shape, Stop, StopTime, Trip, Location, \
     _gtfs_table_registry_
 
 

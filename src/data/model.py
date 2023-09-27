@@ -1,5 +1,7 @@
+"SQLAlchemy model"
+
 from typing import List
-from typing import Optional
+
 from sqlalchemy import ForeignKey, String, Table
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped

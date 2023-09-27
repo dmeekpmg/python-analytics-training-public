@@ -3,12 +3,13 @@ Run this script from the pythontraining folder
 e.g. python -m data.hydrate
 """
 
-from typing import IO
-import pandas as pd
-import zipfile
-import requests
 import os
 from pathlib import Path
+from typing import IO
+import zipfile
+import requests
+
+import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import Table, delete
 
@@ -28,13 +29,16 @@ BUS_SCHEDULE_URI = f"{BASE_URL}/v1/gtfs/schedule/buses"
 FERRY_POSITION = f"{BASE_URL}/v1/gtfs/historical"
 
 def download_gtfs():
+    """Download GTFS data and save to the configured zip folder
+    """
     headers = {
         "Authorization": f"apikey {api_key}"
     }
-    request_details = dict(
-        headers=headers,
-        stream=True
-    )
+    request_details = {
+        "timeout": 50,
+        "headers": headers,
+        "stream": True
+    }
     # On our network, we need to add a certificate or the request will fail
     # Look at the readme for instructions on how to set this up
     if cert:=os.getenv("CERT", None):
@@ -47,6 +51,12 @@ def download_gtfs():
 
 
 def replace_table(table: Table, df: pd.DataFrame):
+    """Upload data to a given table and replace any existing data
+
+    Args:
+        table (Table): SQLAlchemy table
+        df (pd.DataFrame): Pandas dataframe that matches the table schema
+    """
     # Clear existing records
     stmt = delete(table).where(1==1)
     with Session() as session:
@@ -58,7 +68,16 @@ def replace_table(table: Table, df: pd.DataFrame):
               chunksize=20000)
 
 
-def get_df(table: Table, file: IO):
+def get_df(table: Table, file: IO) -> pd.DataFrame:
+    """Read a CSV from the downloaded GTFS zip file
+
+    Args:
+        table (Table): SQLAlchemy table, used to get the fields to expect
+        file (IO): Path to a file
+
+    Returns:
+        pd.DataFrame: Pandas dataframe of the CSV
+    """
     df_raw = pd.read_csv(file)
     cols_to_include = table._gtfs_fields_
     new_cols = [c.name for c in table.__table__.columns]
@@ -69,6 +88,9 @@ def get_df(table: Table, file: IO):
 
 
 def upload_gtfs_files():
+    """Upload all CSV files from the GTFS zip. Uses the SQLAlchemy table
+    definitions to figure out which tables are included
+    """
     with zipfile.ZipFile(zip_path) as z:
         for table in _gtfs_table_registry_:
             print(table.__tablename__)

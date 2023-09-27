@@ -1,7 +1,7 @@
 import pandas as pd
 from plotly.graph_objects import Figure
 
-from pythontraining.visualisations import maps
+from src.visualisations import maps
 
 
 def test_map():

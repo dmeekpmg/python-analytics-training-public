@@ -1,6 +1,6 @@
 import pandas as pd
 
-from pythontraining.data import shapes
+from src.data import shapes
 
 
 def test_restructure():

@@ -1,9 +1,15 @@
 {
-    "jupyter.notebookFileRoot": "${workspaceFolder}/pythontraining",
-    "python.analysis.extraPaths": ["${workspaceFolder}/pythontraining"],
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
+    "python.autoComplete.extraPaths": ["./src"],
+    //for multi-root workspaces, the absolute path must be set in your workspace settings
+    //using the following
+    //"python.analysis.extraPaths": [
+    //    "${workspaceFolder:_jobs}/src"
+    //],
+    "python.analysis.extraPaths": ["src"],
+    "jupyter.notebookFileRoot": "${workspaceFolder}/src",
+    "python.analysis.autoSearchPaths": true,
+    //"python.analysis.extraPaths": ["${workspaceFolder:repo}/src"],
+    "python.testing.pytestArgs": ["tests"],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
 }
