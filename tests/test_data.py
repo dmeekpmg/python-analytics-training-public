@@ -1,7 +1,7 @@
 "Test simple data processing"
 import pandas as pd
 
-from src.data import shapes
+from data import shapes
 
 
 def test_restructure():

@@ -10,7 +10,7 @@ import polars as pl
 from polars import testing # pylint:disable=W0611
 import pytest
 
-from src.analysis import bunching
+from analysis import bunching
 
 
 TEST_LIBRARIES = [
@@ -42,7 +42,7 @@ DATASETS = {
     }
 }
 
-testdata = [(*l, v) for l in TEST_LIBRARIES for _, v in DATASETS.keys()] #pylint:disable=C0201
+testdata = [(*l, k) for l in TEST_LIBRARIES for k in DATASETS.keys()] #pylint:disable=C0201
 
 
 @pytest.mark.parametrize("lib,frame_type,bunching_func,dataset_name", testdata)
