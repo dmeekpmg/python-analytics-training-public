@@ -1,10 +1,25 @@
+"""
+We are trying to find buses on the same route that are close to each
+other.
+
+If the rows could be sorted so that the next closest bus is in the next
+row, then we could have a very fast search. However, buses could have
+non-linear routes where sorting on one field leaves the nearest buses in
+non-consecutive rows. Instead, we will do a cartesian product within
+each route and request_timestamp.
+"""
+
+
 from typing import List
 
 import pandas as pd
 import polars as pl
 
+LAT_ALLOWANCE = 0.002
+LON_ALLOWANCE = 0.002
 
-def is_bunched(df: pd.DataFrame) -> List[bool]:
+
+def is_bunched(df: pd.DataFrame) -> pd.DataFrame:
     """
     Get a list of lat / lon that are bunches.
     Only compares lat and lon for each route and timestamp. Some routes may
@@ -17,8 +32,8 @@ def is_bunched(df: pd.DataFrame) -> List[bool]:
         )
         .query(
             "((lat1 != lat2) or (lon1 != lon2)) "
-            "and abs(lat1 - lat2) < 0.002 "
-            "and abs(lon1 - lon2) < 0.002"
+            f"and abs(lat1 - lat2) < {LAT_ALLOWANCE} "
+            f"and abs(lon1 - lon2) < {LON_ALLOWANCE}"
         )[["request_timestamp", "short_name", "direction_id", "lat1", "lon1"]]
         .drop_duplicates()
         .rename(columns={"lat1": "lat", "lon1": "lon"})
@@ -34,7 +49,7 @@ def is_bunched(df: pd.DataFrame) -> List[bool]:
     return df
 
 
-def is_bunched_pl(df: pl.DataFrame) -> pl.DataFrame:
+def is_bunched_pl(df: [pl.DataFrame|pl.LazyFrame]) -> pl.DataFrame:
     """
     Get a list of lat / lon that are bunches.
     Only compares lat and lon for each route and timestamp. Some routes may
@@ -48,8 +63,8 @@ def is_bunched_pl(df: pl.DataFrame) -> pl.DataFrame:
                 (pl.col("lat") != pl.col("lat_right"))
                 | (pl.col("lon") != pl.col("lon_right"))
             )
-            & ((pl.col("lat") - pl.col("lat_right")).abs() < 0.002)
-            & ((pl.col("lon") - pl.col("lon_right")).abs() < 0.002)
+            & ((pl.col("lat") - pl.col("lat_right")).abs() < LAT_ALLOWANCE)
+            & ((pl.col("lon") - pl.col("lon_right")).abs() < LON_ALLOWANCE)
         )
         .select("lat", "lon", "request_timestamp", "direction_id", "short_name")
         .unique()
@@ -59,32 +74,7 @@ def is_bunched_pl(df: pl.DataFrame) -> pl.DataFrame:
     df = df.join(bunches, how="left", on=join_on + ["lat", "lon"]).with_columns(
         pl.col("bunched").fill_null(False).alias("bunched")
     )
-    return df
-
-
-def is_bunched_pl_lazy(df: pl.LazyFrame) -> pl.DataFrame:
-    """
-    Get a list of lat / lon that are bunches.
-    Only compares lat and lon for each route and timestamp. Some routes may
-    loop back on themselves and will incorrectly appear to have bunching
-    """
-    join_on = ["request_timestamp", "short_name", "direction_id"]
-    bunches = (
-        df.join(df, how="inner", on=join_on)
-        .filter(
-            (
-                (pl.col("lat") != pl.col("lat_right"))
-                | (pl.col("lon") != pl.col("lon_right"))
-            )
-            & ((pl.col("lat") - pl.col("lat_right")).abs() < 0.002)
-            & ((pl.col("lon") - pl.col("lon_right")).abs() < 0.002)
-        )
-        .select("lat", "lon", "request_timestamp", "direction_id", "short_name")
-        .unique()
-        .with_columns(pl.lit(True).alias("bunched"))
-    )
-
-    df = df.join(bunches, how="left", on=join_on + ["lat", "lon"]).with_columns(
-        pl.col("bunched").fill_null(False).alias("bunched")
-    )
-    return df.collect()
+    try:
+        return df.collect()
+    except AttributeError:
+        return df

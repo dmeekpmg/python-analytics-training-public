@@ -1,9 +1,11 @@
+"Test simple data processing"
 import pandas as pd
 
 from src.data import shapes
 
 
 def test_restructure():
+    "Rename columns"
     df = pd.DataFrame({
         'shape_pt_lat': [1, 2, 3],
         'shape_pt_lon': [5, 6, 7]
@@ -12,6 +14,7 @@ def test_restructure():
 
 
 def test_add_end_lat_lon():
+    "Add starting and ending lat and lon to a shape"
     df_in = pd.DataFrame({
         'shape_id': [1, 1, 1, 2, 2, 2],
         'shape_pt_sequence': [1, 3, 2, 7, 5, 6],
