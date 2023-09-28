@@ -1,6 +1,11 @@
+#%%[markdown]
+# # Simple plot positions script
+
+# In VSCode, this script works similar to a notebook.
+# You can either run start to end using the terminal, or you
+# can run in interactive mode
+
 #%%
-import plotly.graph_objects as go
-import plotly.express as px
 import pandas as pd
 
 from data import data, shapes

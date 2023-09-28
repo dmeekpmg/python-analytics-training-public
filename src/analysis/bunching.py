@@ -9,9 +9,6 @@ non-consecutive rows. Instead, we will do a cartesian product within
 each route and request_timestamp.
 """
 
-
-from typing import List
-
 import pandas as pd
 import polars as pl
 

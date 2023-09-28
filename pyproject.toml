@@ -3,3 +3,8 @@ addopts = [
     "--import-mode=importlib",
 ]
 pythonpath = "src"
+
+[tool.pyright]
+root = ['src']
+include = ["src"]
+extraPaths = ["src"]
