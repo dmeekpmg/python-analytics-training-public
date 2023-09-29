@@ -1,3 +1,4 @@
+# pylint:disable=E1101
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 
 import os
 
-from src.data import model
+from data import model
 load_dotenv()
 
 # this is the Alembic Config object, which provides
@@ -72,12 +73,12 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata,
             render_as_batch=True
         )
 
-        with context.begin_transaction():
+        with context.begin_transaction(): 
             context.run_migrations()
 
 

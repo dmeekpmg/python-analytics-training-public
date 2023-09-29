@@ -12,7 +12,7 @@ from data import data, shapes
 from visualisations import maps as vis_maps
 
 #%%
-df_shapes = pd.read_csv(data.path / "shapes.txt")\
+df_shapes = pd.read_csv(data.path / "sample_full_greater_sydney" / "shapes.txt")\
     .pipe(shapes.restructure)\
     .pipe(shapes.add_end_lat_lon)
 

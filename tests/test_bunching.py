@@ -44,7 +44,6 @@ DATASETS = {
 
 testdata = [(*l, k) for l in TEST_LIBRARIES for k in DATASETS.keys()] #pylint:disable=C0201
 
-
 @pytest.mark.parametrize("lib,frame_type,bunching_func,dataset_name", testdata)
 def test_bunches_are_found(lib, frame_type, bunching_func, dataset_name):
     "Test bunching on multiple libraries and functions"
