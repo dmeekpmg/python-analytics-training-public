@@ -23,10 +23,10 @@ api_key = os.getenv("API_KEY")
 headers = {
     "Authorization": f"apikey {api_key}"
 }
-request_details = dict(
-    headers=headers,
-    stream=True
-)
+request_details = {
+    "headers": headers,
+    "stream": True
+}
 if cert:=os.getenv("CERT", None):
     request_details['verify'] = cert
 
@@ -92,6 +92,7 @@ def flatten_entity(position:dict) -> dict:
 
 
 def get_positions_dataframe(positions:List[dict]) -> pd.DataFrame:
+    "Convert a list of positions to a Pandas DataFrame"
     # Example for debugging: Forget to search for ['entity']
     df = pd.DataFrame([flatten_entity(e) for e in positions['entity']])
     df['request_timestamp'] = positions['header']['timestamp']
@@ -104,20 +105,22 @@ def get_latest_positions() -> List[dict]:
     Returns:
         dict: _description_
     """
-    response = requests.get(BUS_POSITION_URI, **request_details)
-    feed = gtfs_realtime_pb2.FeedMessage()
+    response = requests.get(BUS_POSITION_URI, **request_details, timeout=60)
+    feed = gtfs_realtime_pb2.FeedMessage() #pylint: disable=E1101
     feed.ParseFromString(response.content)
     positions = protobuf_to_dict(feed)
     return positions
 
 
 def upload_realtime(df: pd.DataFrame, log:bool = True):
+    "Save pandas dataframe to database"
     df.to_sql("locations", engine, if_exists="append", index=False)
     if log:
         print(f"Saved {len(df)} locations at {datetime.now()}")
 
 
 def fetch_and_upload_positions():
+    "Complete a full cycle of uploading bus positions"
     positions = get_latest_positions()
     df = get_positions_dataframe(positions)
     upload_realtime(df)

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 import os
 
-from data import model
+from src.data import model
 load_dotenv()
 
 # this is the Alembic Config object, which provides

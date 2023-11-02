@@ -37,8 +37,6 @@ def generate_fetch_times(start_time=datetime.now(), wait_time=60, max_iters=60):
         yield next_time.timestamp()
         next_time += timedelta(0, wait_time)
 
-    return None
-
 
 def schedule_fetch(scheduler: sched.scheduler, fetch_times: Sequence):
     "schedule the next call first"
@@ -53,7 +51,6 @@ def schedule_fetch(scheduler: sched.scheduler, fetch_times: Sequence):
         realtime.fetch_and_upload_positions()
     except:
         print(f"Fetching failed: {datetime.now()}")
-    # then do your stuff
 
 
 def main():

@@ -1,5 +1,4 @@
 "SQLAlchemy model"
-
 from typing import List
 
 from sqlalchemy import ForeignKey, String, Table
@@ -121,9 +120,7 @@ class Route(Base):
     text_color: Mapped[str] = mapped_column(String(6))
 
     trips: Mapped[List["Trip"]] = relationship(back_populates="route")
-    locations: Mapped[List["Location"]] = relationship(
-        back_populates="route"
-    )
+    locations: Mapped[List["Location"]] = relationship(back_populates="route")
 
     def __repr__(self) -> str:
         attrs = ["id", "agency_id", "short_name", "long_name", "description"]
@@ -253,9 +250,7 @@ class Trip(Base):
     stop_times: Mapped[List["StopTime"]] = relationship(
         back_populates="trips", uselist=True
     )
-    locations: Mapped[List["Location"]] = relationship(
-        back_populates="trip"
-    )
+    locations: Mapped[List["Location"]] = relationship(back_populates="trip")
 
     def __repr__(self) -> str:
         attrs = ["route_id", "service_id", "id", "trip_headsign"]
@@ -276,7 +271,7 @@ class Location(Base):
     speed: Mapped[float] = mapped_column(nullable=True)
     timestamp: Mapped[int]
     congestion_level: Mapped[int]
-    stop_id: Mapped[str] # Always blank
+    stop_id: Mapped[str]  # Always blank
     vehicle_id: Mapped[str]
     label: Mapped[str]
 
